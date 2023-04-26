@@ -1,0 +1,500 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+HOME
+{% endblock title %}
+{% block content  %}
+
+
+<section id="Department" class="py-4">
+  <div class="container">
+    <div class="row">                
+          {% include 'partials/_alerts.html' %}
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+                <h5 class="modal-title" >Add Department</h5>
+                  <div class="card-body">
+                    <form action="create" method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="code">Department code</label>
+                        <input type="number" name="code" class="form-control" >
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Department name</label>
+                        <input type="name" name="name" class="form-control" required>
+                      </div>
+                      <input type="submit" value="Add" class="btn btn-secondary btn-block">
+                    </form>
+                </div>
+        </div>
+        <div class="col-md-4">
+    
+          <form class="example" style="margin:auto;max-width:300px" id="dep_search">
+            <input type="text" id="dep_search_value" placeholder="Department Search.." name="name">
+            <button type="submit" ><i class="fa fa-search"></i></button>
+          </form>
+        </div> 
+        <div class="col-md-4">
+          <table class="table" id="department_table">
+            <thead class="thead-dark">
+              {%if Deps %}
+              <tr>
+                <th scope="col">Department code</th>
+                <th scope="col">Department name</th>
+                <th scope="col">Actions</th>
+  
+              </tr>
+            </thead>
+            <tbody>
+              {% for dep in Deps %}
+              <tr>
+                <td>{{dep.code}}</td>
+                <td>{{dep.name}}</td> 
+                <td>
+                  <button class="btn btn-success form-contr editingdepbutton " data-toggle="modal" data-target="#editModal">EDIT</button>
+                  <form action="{% url 'delete' dep.code %}"  method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger form-contr "type="submit" value="Delete">
+                </form>
+                  
+                </td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+
+            </tbody>
+          </table>
+          {% if Deps.has_other_pages %}
+          <ul class="pagination">
+            {% if Deps.has_previous %}
+              <li class="page-item">
+                <a href="?page={{Deps.previous_page_number}}" class="page-link">&laquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+              </li>
+            {% endif %}
+            {% for i in Deps.paginator.page_range %}
+              {% if Deps.number == i %}
+                <li class="page-item active">
+                  <a class="page-link">{{i}}</a>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a href="?page={{i}}" class="page-link">{{i}}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            {% if Deps.has_next %}
+              <li class="page-item">
+                <a href="?page={{Deps.next_page_number}}" class="page-link">&raquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link">&raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}  
+
+         
+        </div> 
+
+        
+<!-- edit Modal -->
+<div class="modal fade" id="editModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inquiryModalLabel">Edit department</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+       
+        <form action="{% url 'edit' %}" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="id" id="code_id">
+          <div class="form-group">
+            <label for="code" class="col-form-label">Code:</label>
+            <input type="number"  id="editcode" name="code" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="name" class="col-form-label" >Name:</label>
+            <input type="text"  id="editname" name="name" class="form-control" required>
+          </div>
+          <input type="submit" value="edit" class="btn btn-block btn-secondary">
+        </form>   
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="employee" class="py-4">
+  <div class="container">
+    <div class="row">
+        <div class="col-md-4">
+                <h5 class="modal-title" >Add emplyee</h5>
+                  <div class="card-body">
+                    <form action= "{% url 'createEmployee' %}"method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="code">code</label>
+                        <input type="number" name="code" class="form-control" >
+                      </div>
+                      <div class="form-group">
+                        <label for="name"> name</label>
+                        <input type="text" name="name" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="mobile"> mobile</label>
+                        <input type="number" name="mobile" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="email"> email</label>
+                        <input type="email" name="email" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="birthdate"> birthdate</label>
+                        <input type="date" name="birthdate" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="salary"> salary</label>
+                        <input type="text" name="salary" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="department">Department Name</label>
+                        <input list="departmentlist" id="department" name="department_name" class="form-control" required/>
+                        <datalist id="departmentlist">
+                          {%if departments%}
+                          {% for dep in departments %}
+                            <option value={{dep.name}}></option>
+                          {%endfor%} 
+                          {%endif%}
+                        </datalist>
+                      </div> 
+                      <input type="submit" value="Add" class="btn btn-secondary btn-block">
+                    </form>
+                </div>
+        </div>
+        <div class="col-md-8">
+          <table class="table">
+            <thead class="thead-dark">
+              {%if employees %}
+              <tr>
+                <th scope="col">code</th>
+                <th scope="col">name</th>
+                <th scope="col">email</th>
+                <th scope="col">mobile</th>
+                <th scope="col">salary</th>
+                <th scope="col">birthdate</th>
+                <th scope="col">department_name</th>
+                <th scope="col">Actions</th>
+  
+              </tr>
+            </thead>
+            <tbody>
+              {% for emp in employees %}
+              <tr>
+                <td>{{emp.user_code}}</td>
+                <td>{{emp.user_name}}</td> 
+                <td>{{emp.email}}</td> 
+                <td>{{emp.mobile}}</td>
+                <td>{{emp.salary}}</td>
+                <td>{{emp.birthdate}}</td>
+                <td>{{emp.department.name}}</td>  
+                <td>
+                  <button class="btn btn-success form-contr editingEmployeebutton " data-toggle="modal" data-target="#editEmployeeModal">EDIT</button>
+                  <form action="{% url 'deleteEmployee' emp.user_code %}" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger form-contr  "type="submit" value="Delete">
+                </form>
+                  
+                </td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+
+            </tbody>
+          </table>
+          {% if employees.has_other_pages %}
+          <ul class="pagination">
+            {% if employees.has_previous %}
+              <li class="page-item">
+                <a href="?page={{employees.previous_page_number}}" class="page-link">&laquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+              </li>
+            {% endif %}
+            {% for i in employees.paginator.page_range %}
+              {% if employees.number == i %}
+                <li class="page-item active">
+                  <a class="page-link">{{i}}</a>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a href="?page={{i}}" class="page-link">{{i}}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            {% if employees.has_next %}
+              <li class="page-item">
+                <a href="?page={{employees.next_page_number}}" class="page-link">&raquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link">&raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}  
+        </div> 
+        
+        
+
+
+<!-- edit Modal -->
+<div class="modal fade" id="editEmployeeModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inquiryModalLabel">Edit Employee</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+       
+        <form action="{% url 'editEmployee' %}" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="emp_code_id" id="user_code_id">
+          <div class="form-group">
+            <label for="user_code" class="col-form-label">Code:</label>
+            <input type="number"  id="editusercode" name="user_code" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="user_name" class="col-form-label" >Name:</label>
+            <input type="text"  id="editusername" name="user_name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="email" class="col-form-label">email:</label>
+            <input type="email"  id="editemail" name="email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="mobile" class="col-form-label" >mobile:</label>
+            <input type="number"  id="editmobile" name="mobile" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="salary" class="col-form-label">salary:</label>
+            <input type="text"  id="editsalary" name="salary" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="birthdate" class="col-form-label" >birthdate:</label>
+            <input type="date"  id="editbirthdate" name="birthdate" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="department">Department Name</label>
+            <input list="departmentlist" id="editdepartment" name="department_name" class="form-control" required/>
+            <datalist id="departmentlist">
+              {%if departments%}
+              {% for dep in departments %}
+                <option value={{dep.name}}></option>
+              {%endfor%} 
+              {%endif%}
+            </datalist>
+          </div> 
+          <input type="submit" value="edit" class="btn btn-block btn-secondary">
+        </form>   
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+  <div class="container bg-primary text-center text-white p-4 m-4">
+    <div class="row">
+      <div class"col-md-4">
+          <div class="card-body">
+            <form action="{% url 'searchEmployee' %}" method="POST"  id="searchEmp">
+              {% csrf_token %}
+              <div class="form-group d-flex">
+                <label for="name">Name</label>
+                <input type="text" name="empname" class="form-control ml-2" id="sEmpName" >
+              </div>
+              <div class="form-group d-flex" >
+                <label for="empid">Employee ID</label>
+                <input type="text" name="empid" class="form-control ml-2" id="sEmpID">
+              </div>
+              <input type="submit" value="search" class="btn btn-secondary btn-block">
+            </form>
+            <form action="{% url 'searchEmployee' %}" method="GET" >
+          
+        </div>
+      </div>
+        <div class="col-md-4 text-black">
+          {% csrf_token %}
+          <input type="submit" value="Show All Employee" class="btn btn-secondary btn-block ">
+          </form>
+        </div>
+        <div class="col-md-4 border rounded"  id='tree'>
+          <ul id="myUL">
+            {% for d in de %}
+            <li><span class="caret" id="root">{{d}}</span>
+              <ul class="nested" id="nested">
+              {% for e in em %} 
+              {%  ifequal e.department.name d %}
+                <li>{{e.user_name}}</li>  
+              {% endifequal %}
+              {%endfor%} 
+            </ul>
+              {% endfor%}
+            </li>
+          </ul>
+        </div>
+    <div>
+  <div>     
+</section>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+  $(function(){
+    $('.table').on('click', 'button.editingdepbutton',function (ele) {
+        var tr = ele.target.closest('tr');
+        
+
+        var code = tr.cells[0].textContent;
+        var name = tr.cells[1].textContent;
+        
+        
+        $('#editcode').val(code);
+        $('#editname').val(name);
+        $('#code_id').val(code); 
+    });
+ 
+    $('.table').on('click', 'button.editingEmployeebutton',function (ele) {
+        var tr = ele.target.closest('tr');
+        
+        var code = tr.cells[0].textContent;
+        var name = tr.cells[1].textContent;
+        var email = tr.cells[2].textContent;
+        var mobile = tr.cells[3].textContent;
+        var salary = tr.cells[4].textContent;
+        var birthdate= tr.cells[5].textContent;
+        var department=tr.cells[6].textContent;
+
+        $('#editusercode').val(code);
+        $('#editusername').val(name);
+        $('#editemail').val(email);
+        $('#editmobile').val(mobile);
+        $('#editsalary').val(salary); 
+        $('#editbirthdate').val(birthdate);
+        $('#editdepartment').val(department);
+        $('#user_code_id').val(code); 
+        
+    });
+
+    $("#dep_search").submit(function (e) {
+      e.preventDefault();
+      var searchValue = $('#dep_search_value').val();
+      $.ajax({
+        url: "search",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify({"searchValue": searchValue},),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",  
+          "X-CSRFToken": getCookie("csrftoken"),  
+    
+        },
+        success: (data) => { 
+          $("#department_table tbody").html('');
+          for(var value of data['context'] ){
+          $("#department_table tbody").prepend(
+                    `<tr>
+                    <td>${value["code"]}</td>
+                    <td>${value["name"]}</td>
+                    <td>
+                      <button class="btn btn-success form-contr editingdepbutton " data-toggle="modal" data-target="#editModal">EDIT</button>
+                      <form action="delete/${value['code']}"  method="post">
+                        {% csrf_token %}
+                        <input class="btn btn-danger form-contr "type="submit" value="Delete">
+                    </form>
+                    </td>
+                    </tr>`
+                   )
+                  }
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    });
+});
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+var toggler = document.getElementsByClassName("caret");
+var i;
+
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].addEventListener("click", function() {
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+  });
+}
+
+
+
+</script>
+
+{%endblock%}

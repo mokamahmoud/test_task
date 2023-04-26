@@ -1,0 +1,129 @@
+{% load static  %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Task{% block title %} {% endblock title %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href=" {% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href=" {% static 'css/bootstrap.css' %}">
+  <!-- lightbox -->
+  <link rel="stylesheet" href=" {% static 'css/lightbox.min.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href=" {% static 'css/style.css' %}">
+  <style>
+    body {
+      font-family: Arial;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    form.example input[type=text] {
+      padding: 10px;
+      font-size: 17px;
+      border: 1px solid grey;
+      float: left;
+      width: 80%;
+      background: #f1f1f1;
+    }
+    
+    form.example button {
+      float: left;
+      width: 20%;
+      padding: 10px;
+      background: #2196F3;
+      color: white;
+      font-size: 17px;
+      border: 1px solid grey;
+      border-left: none;
+      cursor: pointer;
+    }
+    
+    form.example button:hover {
+      background: #0b7dda;
+    }
+    
+    form.example::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+     margin: 0;
+}
+
+
+ul, #myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.caret-down::before {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */'
+  transform: rotate(90deg);  
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+    </style>
+
+
+  <script src=" {% static 'js/jquery-3.3.1.min.js'%}"> </script>
+  <script src=" {% static 'js/bootstrap.bundle.min.js'%}"></script>
+
+  
+</head>
+<body>
+
+
+    <!--navbar-->
+{% include 'partials/_navbar.html' %}
+ 
+{% block content  %} {% endblock %}
+<script>
+  setTimeout(function() {
+    $('#message').fadeOut('slow');
+}, 2000);
+</script>
+  
+  <script src=" {% static 'js/jquery-3.3.1.min.js'%}"></script>
+  <script src=" {% static 'js/bootstrap.bundle.min.js'%}"></script>
+  <script src=" {% static 'js/lightbox.min.js'%}"></script>
+  <script src=" {% static 'js/main.js'%}"></script>
+
+
+</body>
+</html>
